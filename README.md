@@ -15,15 +15,15 @@ Installation
 
 Usage
 ----------------------------------
-To use this library simply make a subclass of the abstract "Command" class. This will force you to overwrite 2 methods that implement your custom command.
+To use this library simply make a subclass of the abstract "Command" class. This will force you to overwrite 2 methods that implement your custom command. The abstract Command superclass provides convenient methods for analyzing the result of the process.
 
-After creating the command object you can execute it using:
+**After creating the command object you can execute it using:**
 
     CommandExecutor exec = CommandExecutor.getCommandExecutor();
     Command customCommand = new YourCommand();
     exec.executeCommand(customCommand);
 
-A very simple example custom Command class:
+**A very simple example custom Command class:**
 
     public class ExampleCommand extends Command{
 
@@ -38,7 +38,7 @@ A very simple example custom Command class:
       }
     }
 
-A slightly more advanced custom Command class:
+**A slightly more advanced custom Command class:**
 
 	public class DirectoryListCommand extends Command{
 
