@@ -41,15 +41,22 @@ public class CommandExecutor {
 	
 	/**
 	 * Execute the given command and link the command object to the newly created process.
+	 * This will also verify that the OS type of the command matches this executor.
+	 * 
+	 * NOTE:
+	 * 		Commands with the OS type "ANY" will be executed by all executors.
+	 * 		Executors with the OS type "ANY" will only execute commands with command type "ANY"
+	 * 			(this makes sense because the OS could not be determined for that executor)
 	 * 
 	 * @param command
-	 * The command object that must be executed on the system
+	 * 		The command object that must be executed on the system
 	 * @throws NonMatchingOSException 
+	 * 		The OS type the command is designed for does not match the command executor type
 	 * @throws IOException 
-	 * 
+	 * 		An IOException occurred while executing the command.
 	 */
 	public void executeCommand(Command command) throws NonMatchingOSException, IOException{
-		if (command.getOSType() == this.OSType){
+		if (command.getOSType() == this.OSType || command.getOSType() == OS.ANY){
 			try {
 				Process p = Runtime.getRuntime().exec(command.getCommand());
 				command.setProcessHandle(p);
@@ -65,7 +72,15 @@ public class CommandExecutor {
 	}
 	
 	
-	public static CommandExecutor getCommandExecutor(OS OSType){
+	/**
+	 * This method will detect the current OS type and returns a appropriate executor for that OS type.
+	 * At any point, there is only one executor for each OS type.
+	 * 
+	 * @return 
+	 * 		The singleton CommandExecutor object for the detected OS type.
+	 */
+	public static CommandExecutor getCommandExecutor(){
+		OS OSType = detectOSType();
 		if(CommandExecutor.singleton.get(OSType) == null){
 			CommandExecutor.singleton.put(OSType, new CommandExecutor(OSType));
 		}
@@ -73,8 +88,55 @@ public class CommandExecutor {
 	}
 	
 	
+	/**
+	 * Detect the OS type that is currently running.
+	 * 
+	 * @return 
+	 * 		The current OS type
+	 * 		Returns OS.ANY if the OS type could not be determined
+	 */
+	private static OS detectOSType(){
+		String os = System.getProperty("os.name").toLowerCase();
+		OS detected;
+		if(os.contains("win")){
+			detected = OS.WINDOWS;
+		}else if(os.contains("nix") || os.contains("nux") || os.contains("aix") ){
+			detected = OS.UNIX;
+		}else if(os.contains("mac")){
+			detected = OS.MAC;
+		}else{
+			detected = OS.ANY;
+		}
+		
+		return detected;
+	}
+	
+	
+	/**
+	 * Get the OS type of this CommandExecutor
+	 * 
+	 * @return 
+	 * 		the OS type of this executor
+	 * 
+	 */
+	public OS getOSType(){
+		return this.OSType;
+	}
+	
+	/**
+	 * Enum representing the possible OS types
+	 * Currently supports:
+	 * 		- WINDOWS
+	 * 		- LINUX
+	 * 		- MAC
+	 * 
+	 * ANY:
+	 * 		For Executor: In case OS type could not be determined or is not supported
+	 * 		For Commands: In case commands should work on any OS
+	 * 
+	 */
 	public enum OS{
-		WINDOWS, LINUX;
+		WINDOWS, UNIX, MAC, ANY;
 	}
 	
 	

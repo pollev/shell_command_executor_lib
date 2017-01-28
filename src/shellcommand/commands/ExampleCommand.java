@@ -12,7 +12,7 @@ public class ExampleCommand extends Command{
 
 	@Override
 	public OS getOSType() {
-		return OS.LINUX;
+		return OS.UNIX;
 	}
 
 }

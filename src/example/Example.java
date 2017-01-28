@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import shellcommand.Command;
 import shellcommand.CommandExecutor;
-import shellcommand.CommandExecutor.OS;
 import shellcommand.NonMatchingOSException;
 import shellcommand.ProcessNotYetStartedException;
 import shellcommand.commands.ExampleCommand;
@@ -13,7 +12,7 @@ public class Example {
 
 	public static void main(String[] args) {
 
-		CommandExecutor ex = CommandExecutor.getCommandExecutor(OS.LINUX);
+		CommandExecutor ex = CommandExecutor.getCommandExecutor();
 		Command command = new ExampleCommand();
 		try {
 			ex.executeCommand(command);
