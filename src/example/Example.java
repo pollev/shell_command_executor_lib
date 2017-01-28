@@ -1,4 +1,4 @@
-package extractor;
+package example;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import shellcommand.NonMatchingOSException;
 import shellcommand.ProcessNotYetStartedException;
 import shellcommand.commands.ExampleCommand;
 
-public class Extractor {
+public class Example {
 
 	public static void main(String[] args) {
 
