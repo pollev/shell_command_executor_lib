@@ -19,22 +19,22 @@ To use this library simply make a subclass of the abstract "Command" class. This
 After creating the command object you can execute it using::
 
     CommandExecutor exec = CommandExecutor.getCommandExecutor();
-		Command customCommand = new YourCommand();
-		exec.executeCommand(customCommand);
+    Command customCommand = new YourCommand();
+    exec.executeCommand(customCommand);
 
 A very simple example custom Command class::
 
     public class ExampleCommand extends Command{
 
-    	@Override
-    	public String getCommand() {
-    		return "ls";
-    	}
+      @Override
+      public String getCommand() {
+        return "ls";
+      }
 
-    	@Override
-    	public OS getOSType() {
-    		return OS.UNIX;
-    	}
+      @Override
+      public OS getOSType() {
+    	  return OS.UNIX;
+      }
     }
 
 
