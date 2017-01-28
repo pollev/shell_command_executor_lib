@@ -58,7 +58,13 @@ public class CommandExecutor {
 	public void executeCommand(Command command) throws NonMatchingOSException, IOException{
 		if (command.getOSType() == this.OSType || command.getOSType() == OS.ANY){
 			try {
-				Process p = Runtime.getRuntime().exec(command.getCommand());
+				Process p = null;;
+				if(this.OSType == OS.UNIX){ // If unix based pass command through /bin/sh to enable support for piping
+					String[] commandarr = {"/bin/sh", "-c", command.getCommand()};
+					p = Runtime.getRuntime().exec(commandarr);
+				}else{
+					p = Runtime.getRuntime().exec(command.getCommand());
+				}
 				command.setProcessHandle(p);
 			} catch (IOException e) {
 				logger.error("IO exception while executing command \"" + command.getCommand() + "\"");
