@@ -166,6 +166,22 @@ public abstract class Command {
 		return this.error;
 	}
 	
+	/**
+	 * Throws a ProcessNotYetStartedException exception if the process has not been executed by the 
+	 * commandExecutor. Otherwise executes Process.waitfor(). See the doc on Process for more information.
+	 * 
+	 * @throws ProcessNotYetStartedException 
+	 * 		The process has not yet been started
+	 * @throws InterruptedException
+	 * 		The current thread was interrupted while waiting for the process to finish
+	 */
+	public void waitForCompletion() throws ProcessNotYetStartedException, InterruptedException{
+		if(this.process == null){
+			throw new ProcessNotYetStartedException(this);
+		}
+		this.process.waitFor();
+	}
+	
 	
 	/**
 	 * This enum represents the possible states a command can be in.
