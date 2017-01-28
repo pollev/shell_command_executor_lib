@@ -1,4 +1,4 @@
-package commands;
+package shellcommand;
 
 public class NonMatchingOSException extends Exception {
 

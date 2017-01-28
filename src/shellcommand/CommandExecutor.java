@@ -1,4 +1,4 @@
-package commands;
+package shellcommand;
 
 import java.io.IOException;
 import java.util.HashMap;
