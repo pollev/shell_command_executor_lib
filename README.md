@@ -17,7 +17,7 @@ Usage
 To use this library simply make a subclass of the abstract "Command" class. This will force you to overwrite 2 methods that implement your custom command.
 
 After creating the command object you can execute it using::
-    
+
     CommandExecutor exec = CommandExecutor.getCommandExecutor();
 		Command customCommand = new YourCommand();
 		exec.executeCommand(customCommand);
