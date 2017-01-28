@@ -14,7 +14,6 @@ hs_err_pid*
 #exclude builds except latest stable
 /bin/
 /target/*
-!/target/Shell-Command-Executor-Lib-latest-STABLE*.jar
 
 #exclude IDE settings
 .project
