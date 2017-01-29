@@ -6,7 +6,6 @@ import shellcommand.Command;
 import shellcommand.CommandExecutor;
 import shellcommand.NonMatchingOSException;
 import shellcommand.ProcessNotYetStartedException;
-import shellcommand.commands.ExampleCommand;
 
 public class Example {
 

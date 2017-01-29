@@ -1,4 +1,4 @@
-package shellcommand.commands;
+package example;
 
 import shellcommand.Command;
 import shellcommand.CommandExecutor.OS;
