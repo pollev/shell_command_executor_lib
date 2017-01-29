@@ -30,7 +30,7 @@ public abstract class Command {
 	private String error = "";
 	
 	//Buffered readers for the Process stdout and stderror.
-	private BufferedReader stdInput;
+	private BufferedReader stdNormalOut;
 	private BufferedReader stdError;
 	
 	/**
@@ -65,8 +65,9 @@ public abstract class Command {
 	 */
 	protected void setProcessHandle(Process process){
 		this.process = process;
-		this.stdInput = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
+		this.stdNormalOut = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
 		this.stdError = new BufferedReader(new InputStreamReader(this.process.getErrorStream()));
+		
 	}
 	
 	
@@ -126,13 +127,13 @@ public abstract class Command {
 	 * 
 	 */
 	public String getNormalOutput(){
-		if(this.process == null || this.stdInput == null){
+		if(this.process == null || this.stdNormalOut == null){
 			return null;
 		}
 		
 		String line = "";;
 		try {
-			while ((line = this.stdInput.readLine()) != null) {
+			while ((line = this.stdNormalOut.readLine()) != null) {
 			    this.result = this.result + line + "\n";
 			}
 		} catch (IOException e) {
