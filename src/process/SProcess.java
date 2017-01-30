@@ -34,9 +34,9 @@ public abstract class SProcess {
 	private String errorHistory = "";
 	
 	//Buffered readers for the process stdout and stderror.
-	private BufferedReader stdNormalOut;
-	private BufferedReader stdError;
-	private BufferedWriter stdInput;
+	protected BufferedReader stdNormalOut;
+	protected BufferedReader stdError;
+	protected BufferedWriter stdInput;
 	
 	/**
 	 * This method must be implemented to return the desired command string
@@ -127,8 +127,9 @@ public abstract class SProcess {
 	 * Get all the currently available, not read, normal output from the process (process stdout)
 	 * 
 	 * @return
-	 * 		The process stdout.
+	 * 		The process stdOut.
 	 * 		An empty String if no output is available
+	 * 		null if the stdOut is not available (for example if it is piped to another process)
 	 * @throws SProcessNotYetStartedException 
 	 * 		If the Process has not yet been executed by a SProcessExecutor
 	 * 
@@ -170,8 +171,9 @@ public abstract class SProcess {
 	 * Get all the currently available, not read, error output from the process (process stdout)
 	 * 
 	 * @return
-	 * 		The process stderror.
+	 * 		The process stdError.
 	 * 		An empty String if no output is available
+	 * 		null if the stdError is not available (for example if it is piped to another process)
 	 * @throws SProcessNotYetStartedException 
 	 * 		If the SProcess has not yet been executed by a SProcessExecutor
 	 * 

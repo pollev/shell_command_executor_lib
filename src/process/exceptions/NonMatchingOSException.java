@@ -1,7 +1,6 @@
 package process.exceptions;
 
 import process.SProcessExecutor;
-import process.SProcessExecutor.OS;
 
 public class NonMatchingOSException extends Exception {
 
