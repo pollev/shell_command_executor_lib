@@ -252,6 +252,32 @@ public abstract class SProcess {
 	
 	
 	/**
+	 * This method actively waits until the child process has data available on its stdOut
+	 * 
+	 * @return
+	 * @throws IOException 
+	 */
+	public void waitForOutputNormal() throws IOException{
+		while(!this.stdNormalOut.ready()){
+			// active waiting untill data is available
+		}
+	}
+	
+	
+	/**
+	 * This method actively waits until the child process has data available on its stdError
+	 * 
+	 * @return
+	 * @throws IOException 
+	 */
+	public void waitForOutputError() throws IOException{
+		while(!this.stdError.ready()){
+			// active waiting untill data is available
+		}
+	}
+	
+	
+	/**
 	 * Throws a ProcessNotYetStartedException exception if the process has not been executed by the 
 	 * SProcessExecutor. Otherwise executes Process.waitfor(). See the doc on Process for more information.
 	 * 
