@@ -1,4 +1,4 @@
-package shellcommand;
+package process;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,19 +10,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An abstract class for representing a shell command and its status.
- * A command is defined by the OS it's designed for and the actual command string.
- * Commands can be executed by the CommandExecutor class.
+ * An abstract class for representing a shell process and its status.
+ * A SProcess is defined by the OS it's designed for and the actual command string.
+ * SProcesses can be executed by the SProcessExecutor class.
  * 
  * @author polle
  *
  */
-public abstract class Command {
+public abstract class SProcess {
 	
 	// logger
-	final Logger logger = LoggerFactory.getLogger(Command.class);	
+	final Logger logger = LoggerFactory.getLogger(SProcess.class);	
 	
-	// Process tied to this command, null if not yet executed by CommandExecutor.
+	// Process tied to this SProcess, null if not yet executed by SProcessExecutor.
 	private Process process = null;
 	
 	// Normal output from process
@@ -31,7 +31,7 @@ public abstract class Command {
 	// Error output from process
 	private String errorHistory = "";
 	
-	//Buffered readers for the Process stdout and stderror.
+	//Buffered readers for the process stdout and stderror.
 	private BufferedReader stdNormalOut;
 	private BufferedReader stdError;
 	private BufferedWriter stdInput;
@@ -58,10 +58,10 @@ public abstract class Command {
 	 * The OS Type for this command
 	 * 
 	 */
-	public abstract CommandExecutor.OS getOSType();
+	public abstract SProcessExecutor.OS getOSType();
 	
 	/**
-	 * This method is called by the CommandExecutor to set the process connected to this command
+	 * This method is called by the SProcessExecutor to set the process connected to this SProcess
 	 * 
 	 * @param process the process connected to this command
 	 * 
@@ -75,13 +75,13 @@ public abstract class Command {
 	
 	
 	/**
-	 * Get the status for this Command.
+	 * Get the status for this SProcess.
 	 * 
 	 * @return
-	 * NOT_YET_EXCECUTED: This command has not yet been executed by the CommandExecutor
-	 * WAITING_FOR_COMPLETION: This command is currently processing
+	 * NOT_YET_EXCECUTED: This SProcess has not yet been executed by the SProcessExecutor
+	 * WAITING_FOR_COMPLETION: This SProcess is currently processing
 	 * COMPLETED_NORMAL: normal completion
-	 * COMPLETED_ERROR: command exited with a non zero error code. Use getExitCode() to view
+	 * COMPLETED_ERROR: SProcess exited with a non zero error code. Use getExitCode() to view
 	 * 
 	 */
 	public STATUS getStatus(){
@@ -104,10 +104,10 @@ public abstract class Command {
 	
 	
 	/**
-	 * Get the exit code for this process
+	 * Get the exit code for this SProcess
 	 * 
 	 * @return
-	 * The exit code for this process. null if none is available.
+	 * The exit code for this SProcess. null if none is available.
 	 * 
 	 */
 	public Integer getExitCode(){
@@ -127,13 +127,13 @@ public abstract class Command {
 	 * @return
 	 * 		The process stdout.
 	 * 		An empty String if no output is available
-	 * @throws ProcessNotYetStartedException 
-	 * 		If the Process has not yet been executed by a CommandExecutor
+	 * @throws SProcessNotYetStartedException 
+	 * 		If the Process has not yet been executed by a SProcessExecutor
 	 * 
 	 */
-	public String getNormalOutput() throws ProcessNotYetStartedException{
+	public String getNormalOutput() throws SProcessNotYetStartedException{
 		if(this.process == null || this.stdNormalOut == null){
-			throw new ProcessNotYetStartedException(this);
+			throw new SProcessNotYetStartedException(this);
 		}
 		
 		String output = "";
@@ -170,13 +170,13 @@ public abstract class Command {
 	 * @return
 	 * 		The process stderror.
 	 * 		An empty String if no output is available
-	 * @throws ProcessNotYetStartedException 
-	 * 		If the Process has not yet been executed by a CommandExecutor
+	 * @throws SProcessNotYetStartedException 
+	 * 		If the SProcess has not yet been executed by a SProcessExecutor
 	 * 
 	 */
-	public String getErrorOutput() throws ProcessNotYetStartedException{
+	public String getErrorOutput() throws SProcessNotYetStartedException{
 		if(this.process == null || this.stdError == null){
-			throw new ProcessNotYetStartedException(this);
+			throw new SProcessNotYetStartedException(this);
 		}
 		
 		String output = "";
@@ -208,19 +208,19 @@ public abstract class Command {
 	
 	
 	/**
-	 * Write the input String into the standard input for the process spawned by the command.
+	 * Write the input String into the standard input for the process spawned by the shell command.
 	 * 
 	 * @param input
-	 * 		The String to feed into the stdInput of the process spawned by the command
-	 * @throws ProcessNotYetStartedException
-	 * 		The command has not yet been executed by a CommandExecutor
+	 * 		The String to feed into the stdInput of the process spawned by the shell command
+	 * @throws SProcessNotYetStartedException
+	 * 		The command has not yet been executed by a SProcessExecutor
 	 * @throws IOException
 	 * 		An IOException occurred while writing to the stdInput
 	 */
 	//TODO: Overload method for byte input
-	public void writeToProcessStdIn(String input) throws ProcessNotYetStartedException, IOException{
+	public void writeToProcessStdIn(String input) throws SProcessNotYetStartedException, IOException{
 		if(this.process == null){
-			throw new ProcessNotYetStartedException(this);
+			throw new SProcessNotYetStartedException(this);
 		}
 		this.stdInput.write(input);
 		this.stdInput.flush();
@@ -249,16 +249,16 @@ public abstract class Command {
 	
 	/**
 	 * Throws a ProcessNotYetStartedException exception if the process has not been executed by the 
-	 * commandExecutor. Otherwise executes Process.waitfor(). See the doc on Process for more information.
+	 * SProcessExecutor. Otherwise executes Process.waitfor(). See the doc on Process for more information.
 	 * 
-	 * @throws ProcessNotYetStartedException 
+	 * @throws SProcessNotYetStartedException 
 	 * 		The process has not yet been started
 	 * @throws InterruptedException
 	 * 		The current thread was interrupted while waiting for the process to finish
 	 */
-	public void waitForCompletion() throws ProcessNotYetStartedException, InterruptedException{
+	public void waitForCompletion() throws SProcessNotYetStartedException, InterruptedException{
 		if(this.process == null){
-			throw new ProcessNotYetStartedException(this);
+			throw new SProcessNotYetStartedException(this);
 		}
 		this.process.waitFor();
 	}

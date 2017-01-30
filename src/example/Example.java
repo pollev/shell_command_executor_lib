@@ -2,22 +2,22 @@ package example;
 
 import java.io.IOException;
 
-import shellcommand.Command;
-import shellcommand.CommandExecutor;
-import shellcommand.NonMatchingOSException;
-import shellcommand.ProcessNotYetStartedException;
+import process.SProcess;
+import process.SProcessExecutor;
+import process.NonMatchingOSException;
+import process.SProcessNotYetStartedException;
 
 public class Example {
 
 	public static void main(String[] args) {
 
-		CommandExecutor ex = CommandExecutor.getCommandExecutor();
-		Command command = new ExampleCommand();
+		SProcessExecutor ex = SProcessExecutor.getCommandExecutor();
+		SProcess command = new ExampleCommand();
 		try {
 			ex.executeCommand(command);
 			command.waitForCompletion();
 			System.out.println(command.getNormalOutput());
-		} catch (NonMatchingOSException | IOException | ProcessNotYetStartedException | InterruptedException e) {
+		} catch (NonMatchingOSException | IOException | SProcessNotYetStartedException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-package shellcommand;
+package process;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,21 +7,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class handles command objects and executes them. 
+ * This class handles SProcess objects and executes them. 
  * It also provides support for checking the OS that we run on.
  * 
  * @author polle
  *
  */
-public class CommandExecutor {
+public class SProcessExecutor {
 
 	/**
-	 * Map of OS types to command executors, ensures only one executor per OS type.
+	 * Map of OS types to SProcess executors, ensures only one executor per OS type.
 	 */
-	private static HashMap<OS, CommandExecutor> singleton = new HashMap<>();
+	private static HashMap<OS, SProcessExecutor> singleton = new HashMap<>();
 	
 	// logger
-	final Logger logger = LoggerFactory.getLogger(CommandExecutor.class);	
+	final Logger logger = LoggerFactory.getLogger(SProcessExecutor.class);	
 	
 	/**
 	 * OS type of this executor (for example a windows executor), this ensures no commands designed for a different OS get executed.
@@ -30,32 +30,32 @@ public class CommandExecutor {
 	
 	
 	/**
-	 * This is a private constructor. Access to this class should happen through getCommandExecutor().
+	 * This is a private constructor. Access to this class should happen through getSProcessExecutor().
 	 * 
 	 * @param OSType
 	 */
-	private CommandExecutor(OS OSType){
+	private SProcessExecutor(OS OSType){
 		this.OSType = OSType;
 	}
 	
 	
 	/**
-	 * Execute the given command and link the command object to the newly created process.
-	 * This will also verify that the OS type of the command matches this executor.
+	 * Execute the given SProcess and link the SProcess object to the newly created process.
+	 * This will also verify that the OS type of the SProcess matches this executor.
 	 * 
 	 * NOTE:
-	 * 		Commands with the OS type "ANY" will be executed by all executors.
-	 * 		Executors with the OS type "ANY" will only execute commands with command type "ANY"
+	 * 		SProcesses with the OS type "ANY" will be executed by all executors.
+	 * 		Executors with the OS type "ANY" will only execute SProcesses with OS type "ANY"
 	 * 			(this makes sense because the OS could not be determined for that executor)
 	 * 
 	 * @param command
-	 * 		The command object that must be executed on the system
+	 * 		The SProcess object that must be executed on the system
 	 * @throws NonMatchingOSException 
-	 * 		The OS type the command is designed for does not match the command executor type
+	 * 		The OS type the command SProcess is designed for does not match the executor type
 	 * @throws IOException 
 	 * 		An IOException occurred while executing the command.
 	 */
-	public void executeCommand(Command command) throws NonMatchingOSException, IOException{
+	public void executeCommand(SProcess command) throws NonMatchingOSException, IOException{
 		if (command.getOSType() == this.OSType || command.getOSType() == OS.ANY){
 			try {
 				Process p = null;
@@ -89,12 +89,12 @@ public class CommandExecutor {
 	 * @return 
 	 * 		The singleton CommandExecutor object for the detected OS type.
 	 */
-	public static CommandExecutor getCommandExecutor(){
+	public static SProcessExecutor getCommandExecutor(){
 		OS OSType = detectOSType();
-		if(CommandExecutor.singleton.get(OSType) == null){
-			CommandExecutor.singleton.put(OSType, new CommandExecutor(OSType));
+		if(SProcessExecutor.singleton.get(OSType) == null){
+			SProcessExecutor.singleton.put(OSType, new SProcessExecutor(OSType));
 		}
-		return CommandExecutor.singleton.get(OSType);
+		return SProcessExecutor.singleton.get(OSType);
 	}
 	
 	
@@ -123,7 +123,7 @@ public class CommandExecutor {
 	
 	
 	/**
-	 * Get the OS type of this CommandExecutor
+	 * Get the OS type of this SProcessExecutor
 	 * 
 	 * @return 
 	 * 		the OS type of this executor
@@ -142,7 +142,7 @@ public class CommandExecutor {
 	 * 
 	 * ANY:
 	 * 		For Executor: In case OS type could not be determined or is not supported
-	 * 		For Commands: In case commands should work on any OS
+	 * 		For SProcesses: In case commands should work on any OS
 	 * 
 	 */
 	public enum OS{

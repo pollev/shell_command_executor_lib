@@ -1,9 +1,9 @@
 package example;
 
-import shellcommand.Command;
-import shellcommand.CommandExecutor.OS;
+import process.SProcess;
+import process.SProcessExecutor.OS;
 
-public class ExampleCommand extends Command{
+public class ExampleCommand extends SProcess{
 
 	@Override
 	public String getCommand() {

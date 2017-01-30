@@ -2,13 +2,13 @@ package example;
 
 import java.io.IOException;
 
-import shellcommand.Command;
-import shellcommand.CommandExecutor;
-import shellcommand.NonMatchingOSException;
-import shellcommand.ProcessNotYetStartedException;
-import shellcommand.CommandExecutor.OS;
+import process.SProcess;
+import process.SProcessExecutor;
+import process.NonMatchingOSException;
+import process.SProcessNotYetStartedException;
+import process.SProcessExecutor.OS;
 
-public class TestInputCommand extends Command{
+public class TestInputCommand extends SProcess{
 
 	@Override
 	public String getCommand() {
@@ -22,8 +22,8 @@ public class TestInputCommand extends Command{
 	
 	public static void main(String[] args) {
 
-		CommandExecutor ex = CommandExecutor.getCommandExecutor();
-		Command command = new TestInputCommand();
+		SProcessExecutor ex = SProcessExecutor.getCommandExecutor();
+		SProcess command = new TestInputCommand();
 		try {
 			ex.executeCommand(command);
 			System.out.println("command: " + command.getCommand());
@@ -51,7 +51,7 @@ public class TestInputCommand extends Command{
 			
 			System.out.println("\n \n end output");
 
-		} catch (NonMatchingOSException | IOException | ProcessNotYetStartedException e) {
+		} catch (NonMatchingOSException | IOException | SProcessNotYetStartedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
