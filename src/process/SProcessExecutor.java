@@ -6,6 +6,8 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import process.exceptions.NonMatchingOSException;
+
 /**
  * This class handles SProcess objects and executes them. 
  * It also provides support for checking the OS that we run on.

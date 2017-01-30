@@ -9,6 +9,8 @@ import java.io.OutputStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import process.exceptions.SProcessNotYetStartedException;
+
 /**
  * An abstract class for representing a shell process and its status.
  * A SProcess is defined by the OS it's designed for and the actual command string.

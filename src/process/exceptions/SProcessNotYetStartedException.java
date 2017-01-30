@@ -1,4 +1,6 @@
-package process;
+package process.exceptions;
+
+import process.SProcess;
 
 public class SProcessNotYetStartedException extends Exception {
 

@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import process.SProcess;
 import process.SProcessExecutor;
-import process.NonMatchingOSException;
-import process.SProcessNotYetStartedException;
 import process.SProcessExecutor.OS;
+import process.exceptions.NonMatchingOSException;
+import process.exceptions.SProcessNotYetStartedException;
 
 public class TestInputCommand extends SProcess{
 
