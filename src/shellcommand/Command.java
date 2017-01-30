@@ -1,8 +1,10 @@
 package shellcommand;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +26,15 @@ public abstract class Command {
 	private Process process = null;
 	
 	// Normal output from process
-	private String result = "";
+	private String resultHistory = "";
 	
 	// Error output from process
-	private String error = "";
+	private String errorHistory = "";
 	
 	//Buffered readers for the Process stdout and stderror.
 	private BufferedReader stdNormalOut;
 	private BufferedReader stdError;
+	private BufferedWriter stdInput;
 	
 	/**
 	 * This method must be implemented to return the desired command string
@@ -67,7 +70,7 @@ public abstract class Command {
 		this.process = process;
 		this.stdNormalOut = new BufferedReader(new InputStreamReader(this.process.getInputStream()));
 		this.stdError = new BufferedReader(new InputStreamReader(this.process.getErrorStream()));
-		
+		this.stdInput = new BufferedWriter(new OutputStreamWriter(this.process.getOutputStream()));
 	}
 	
 	
@@ -119,53 +122,130 @@ public abstract class Command {
 	
 	
 	/**
-	 * Get the normal output from the process (process stdout)
+	 * Get all the currently available, not read, normal output from the process (process stdout)
 	 * 
 	 * @return
-	 * The process stdout.
-	 * Null if command has not been executed yet.
+	 * 		The process stdout.
+	 * 		An empty String if no output is available
+	 * @throws ProcessNotYetStartedException 
+	 * 		If the Process has not yet been executed by a CommandExecutor
 	 * 
 	 */
-	public String getNormalOutput(){
+	public String getNormalOutput() throws ProcessNotYetStartedException{
 		if(this.process == null || this.stdNormalOut == null){
-			return null;
+			throw new ProcessNotYetStartedException(this);
 		}
 		
-		String line = "";;
+		String output = "";
+		char ch;
 		try {
-			while ((line = this.stdNormalOut.readLine()) != null) {
-			    this.result = this.result + line + "\n";
+			while (this.stdNormalOut.ready()) {
+				ch = (char) this.stdNormalOut.read();
+			    output= output + ch;
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
 		}
-		return this.result;
+		this.resultHistory = this.resultHistory + output;
+		return output;
 	}
 	
 	
 	/**
-	 * Get the normal output from the process (process stderror)
+	 * Get all data already read from the process stdOut.
+	 * NOTE: Does not read any new data, data is read using getNormalOutput()
 	 * 
 	 * @return
-	 * The process stderror.
-	 * Null if command has not been executed yet.
+	 * 		All data already read from the process stdOut
 	 * 
 	 */
-	public String getErrorOutput(){
+	public String getNormalOutputHistory(){
+		return this.resultHistory;
+	}
+	
+	
+	/**
+	 * Get all the currently available, not read, error output from the process (process stdout)
+	 * 
+	 * @return
+	 * 		The process stderror.
+	 * 		An empty String if no output is available
+	 * @throws ProcessNotYetStartedException 
+	 * 		If the Process has not yet been executed by a CommandExecutor
+	 * 
+	 */
+	public String getErrorOutput() throws ProcessNotYetStartedException{
 		if(this.process == null || this.stdError == null){
-			return null;
+			throw new ProcessNotYetStartedException(this);
 		}
 		
-		String line = "";;
+		String output = "";
+		char ch;
 		try {
-			while ((line = this.stdError.readLine()) != null) {
-			    this.error = this.error + line + "\n";
+			while (this.stdError.ready()) {
+				ch = (char) this.stdError.read();
+			    output= output + ch;
 			}
 		} catch (IOException e) {
 			logger.warn(e.getMessage());
 		}
-		return this.error;
+		this.errorHistory = this.errorHistory + output;
+		return output;
 	}
+	
+	
+	/**
+	 * Get all data already read from the process stdError.
+	 * NOTE: Does not read any new data, data is read using getErrorOutput()
+	 * 
+	 * @return
+	 * 		All data already read from the process stdOut
+	 * 
+	 */
+	public String getErrorOutputHistory(){
+		return this.errorHistory;
+	}
+	
+	
+	/**
+	 * Write the input String into the standard input for the process spawned by the command.
+	 * 
+	 * @param input
+	 * 		The String to feed into the stdInput of the process spawned by the command
+	 * @throws ProcessNotYetStartedException
+	 * 		The command has not yet been executed by a CommandExecutor
+	 * @throws IOException
+	 * 		An IOException occurred while writing to the stdInput
+	 */
+	//TODO: Overload method for byte input
+	public void writeToProcessStdIn(String input) throws ProcessNotYetStartedException, IOException{
+		if(this.process == null){
+			throw new ProcessNotYetStartedException(this);
+		}
+		this.stdInput.write(input);
+		this.stdInput.flush();
+	}
+	
+	
+	/**
+	 * This method actively waits until the child process has data available:
+	 * 	- On its stdOut: returns true
+	 * 	- On its stdError: returns false
+	 * or 
+	 * @return
+	 * @throws IOException 
+	 */
+	public boolean waitForOutput() throws IOException{
+		while(!this.stdNormalOut.ready() && !this.stdError.ready()){
+			// active waiting untill one is ready
+		}
+		if(this.stdNormalOut.ready()){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	
 	/**
 	 * Throws a ProcessNotYetStartedException exception if the process has not been executed by the 
