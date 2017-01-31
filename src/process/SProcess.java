@@ -144,8 +144,8 @@ public abstract class SProcess {
 		try {
 			while (this.stdNormalOut.ready()) {
 				ch = (char) this.stdNormalOut.read();
-				if(ch == -1){
-					break;
+				if(Character.getNumericValue(ch) == -1){
+					//break;
 				}
 			    output= output + ch;
 			}
@@ -191,8 +191,8 @@ public abstract class SProcess {
 		try {
 			while (this.stdError.ready()) {
 				ch = (char) this.stdError.read();
-				if(ch == -1){
-					break;
+				if(Character.getNumericValue(ch) == -1){
+					//break;
 				}
 			    output= output + ch;
 			}

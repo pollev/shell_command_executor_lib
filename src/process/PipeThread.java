@@ -25,20 +25,21 @@ public class PipeThread implements Runnable{
 			while(true){
 				// We really want to start off with a blocking read to avoid active waiting
 				char ch = (char) in.read();
-				if(ch == -1){ // We need to check if the character indicates end of stream
+				if(Character.getNumericValue(ch) == -1){ // We need to check if the character indicates end of stream
 					break;
 				}
 				String data =""+ ch;
 				while(in.ready()){ // Now read all available characters
 					ch = (char) in.read();
-					if(ch == -1){ // We don't want to write end of stream to other process
+					System.out.println("char: " + Character.getNumericValue(ch));
+					if(Character.getNumericValue(ch) == -1){ // We don't want to write end of stream to other process
 						break;
 					}
 					data = data + ch;
 				}
 				out.write(data);
 				out.flush();
-				if(ch == -1){ // Check if the last character read indicated end of stream
+				if(Character.getNumericValue(ch) == -1){ // Check if the last character read indicated end of stream
 					break;
 				}
 			}
