@@ -21,7 +21,7 @@ public abstract class SProcessPiped extends SProcess{
 		this.outputPipe = process;
 		process.inputPipe = this;
 		
-		PipeThread pipe = new PipeThread(this.stdNormalOut, process.stdInput);
+		PipeThread pipe = new PipeThread(this.stdNormalOut, process.stdInput, this);
 		(new Thread(pipe)).start();
 	}
 	
@@ -36,7 +36,7 @@ public abstract class SProcessPiped extends SProcess{
 		this.errorPipe = process;
 		process.inputPipe = this;
 		
-		PipeThread pipe = new PipeThread(this.stdError, process.stdInput);
+		PipeThread pipe = new PipeThread(this.stdError, process.stdInput, this);
 		(new Thread(pipe)).start();
 	}
 	
