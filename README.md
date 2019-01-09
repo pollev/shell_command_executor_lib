@@ -1,4 +1,4 @@
-# Shell-Command-Executor-Lib
+# Shell Command Execution Library
 
 This is a Java library that intends to make it easier and safer to execute shell commands on the operating system using Runtime.exec().
 Note: It is probably advised to just use java's ProcessBuilder but this is a fun project to work on.
